@@ -1,5 +1,13 @@
 {
     "version": "2.0.0",
+    "inputs": [
+        {
+            "id": "thresholdFraction",
+            "type": "promptString",
+            "description": "Threshold fraction (0.0-1.0)",
+            "default": "0.5"
+        }
+    ],
     "tasks": [
         {
             "label": "build",
@@ -32,6 +40,88 @@
                 "isDefault": true
             },
             "dependsOn": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "build-viewer",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-Wall",
+                "-Wextra",
+                "-g",
+                "viewer.c",
+                "-o",
+                "${workspaceFolder}\\viewer.exe",
+                "-lraylib",
+                "-lopengl32",
+                "-lgdi32",
+                "-lwinmm"
+            ],
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "run-viewer",
+            "type": "shell",
+            "command": "${workspaceFolder}\\viewer.exe",
+            "dependsOn": "build-viewer",
+            "problemMatcher": []
+        },
+        {
+            "label": "build-fetch",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-Wall", "-Wextra", "-g",
+                "fetch_chunk.c",
+                "-o", "${workspaceFolder}\\fetch_chunk.exe",
+                "-lcurl", "-lblosc2", "-ljson-c", "-lm"
+            ],
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "run-fetch",
+            "type": "shell",
+            "command": "${workspaceFolder}\\fetch_chunk.exe",
+            "dependsOn": "build-fetch",
+            "problemMatcher": []
+        },
+        {
+            "label": "build-pointcloud",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-Wall", "-Wextra", "-g",
+                "point_cloud_viewer.c",
+                "-o", "${workspaceFolder}\\point_cloud_viewer.exe",
+                "-lraylib", "-lopengl32", "-lgdi32", "-lwinmm"
+            ],
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "run-pointcloud",
+            "type": "shell",
+            "command": "${workspaceFolder}\\point_cloud_viewer.exe",
+            "dependsOn": "build-pointcloud",
+            "problemMatcher": []
+        },
+        {
+            "label": "build-mesh",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-Wall", "-Wextra", "-g", "-std=c++17",
+                "mesh_from_chunk.cpp",
+                "-o", "${workspaceFolder}\\mesh_from_chunk.exe"
+            ],
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "run-mesh",
+            "type": "shell",
+            "command": "${workspaceFolder}\\mesh_from_chunk.exe",
+            "args": ["${input:thresholdFraction}"],
+            "dependsOn": "build-mesh",
             "problemMatcher": []
         }
     ]
