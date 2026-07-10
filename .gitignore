@@ -1,0 +1,18 @@
+# Compiled binaries
+*.exe
+*.out
+*.o
+*.obj
+
+# Build folders
+build/
+bin/
+
+# OS junk
+Thumbs.db
+.DS_Store
+
+# Vesuvius data cache and outputs
+*.zarr/
+*.bmp
+*.ppm
